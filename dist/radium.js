@@ -70,13 +70,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
-
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -88,6 +86,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var displayName = ComposedComponent.displayName || ComposedComponent.name || 'Component';
 
 	  var RadiumEnhancer = (function (_ComposedComponent) {
+	    _inherits(RadiumEnhancer, _ComposedComponent);
+
 	    function RadiumEnhancer() {
 	      _classCallCheck(this, RadiumEnhancer);
 
@@ -96,8 +96,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.state = this.state || {};
 	      this.state._radiumStyleState = {};
 	    }
-
-	    _inherits(RadiumEnhancer, _ComposedComponent);
 
 	    _createClass(RadiumEnhancer, [{
 	      key: 'render',
@@ -262,9 +260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {/* @flow */
-
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -407,8 +403,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var oldChildren = renderedElement.props.children;
 	  if (oldChildren) {
 	    var childrenType = typeof oldChildren;
-	    if (childrenType === 'string' || childrenType === 'number') {
-	      // Don't do anything with a single primitive child
+	    if (childrenType === 'string' || childrenType === 'number' || childrenType === 'function') {
+	      // Don't do anything with a single primitive child or functions
 	      newChildren = oldChildren;
 	    } else if (React.Children.count(oldChildren) === 1 && oldChildren.type) {
 	      // If a React Element is an only child, don't wrap it in an array for
@@ -459,7 +455,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'listStyle': ['listStyleImage', 'listStylePosition', 'listStyleType'],
 	      'margin': ['marginBottom', 'marginLeft', 'marginRight', 'marginTop'],
 	      'padding': ['paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop'],
-	      'transform': ['transformOrigin', 'transformStyle'],
 	      'transition': ['transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction']
 	    };
 
@@ -595,8 +590,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* @flow */
-
 	'use strict';
 
 	var ExecutionEnvironment = __webpack_require__(5);
@@ -663,8 +656,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 6 */
 /***/ function(module, exports) {
 
-	/* @flow */
-
 	'use strict';
 
 	var _callbacks = [];
@@ -707,8 +698,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports) {
 
-	/* @flow */
-
 	'use strict';
 
 	var VALID_KEYS = [':active', ':focus', ':hover'];
@@ -739,6 +728,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ExecutionEnvironment = __webpack_require__(5);
 	var arrayFind = __webpack_require__(9);
 
+	var VENDOR_PREFIX_REGEX = /-(moz|webkit|ms|o)-/;
+
 	var infoByCssPrefix = {
 	  '-moz-': {
 	    cssPrefix: '-moz-',
@@ -746,23 +737,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	    alternativeProperties: {
 	      // OLD - Firefox 19-
 	      flex: [{ css: '-moz-box-flex', js: 'MozBoxFlex' }],
-	      order: [{ css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup' }]
+	      order: [{ css: '-moz-box-ordinal-group', js: 'MozBoxOrdinalGroup' }],
+	      flexDirection: [{ css: '-moz-box-orient', js: 'MozBoxOrient' }],
+	      alignItems: [{ css: '-moz-box-align', js: 'MozBoxAlign' }],
+	      justifyContent: [{ css: '-moz-box-pack', js: 'MozBoxPack' }]
 	    },
 	    alternativeValues: {
+	      // OLD - Firefox 19-
 	      display: {
-	        // OLD - Firefox 19-
 	        flex: ['-moz-box']
+	      },
+	      flexDirection: {
+	        row: ['horizontal'],
+	        column: ['vertical']
+	      },
+	      alignItems: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
+	      justifyContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify']
 	      }
 	    }
 	  },
 	  '-ms-': {
 	    cssPrefix: '-ms-',
 	    jsPrefix: 'ms',
+	    alternativeProperties: {
+	      // TWEENER - IE 10
+	      order: [{ css: '-ms-flex-order', js: 'msFlexOrder' }],
+	      alignSelf: [{ css: '-ms-flex-align-item', js: 'msFlexAlignItem' }],
+	      alignItems: [{ css: '-ms-flex-align', js: 'msFlexAlign' }],
+	      justifyContent: [{ css: '-ms-flex-pack', js: 'msFlexPack' }],
+	      alignContent: [{ css: '-ms-flex-line-pack', js: 'msFlexLinePack' }]
+	    },
 	    alternativeValues: {
+	      // TWEENER - IE 10
 	      display: {
-	        // TWEENER - IE 10
 	        flex: ['-ms-flexbox'],
-	        order: ['-ms-flex-order']
+	        'inline-flex': ['-ms-inline-flexbox']
+	      },
+	      alignSelf: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
+	      alignItems: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
+	      justifyContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify'],
+	        'space-around': ['distribute']
+	      },
+	      alignContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify'],
+	        'space-around': ['distribute']
 	      }
 	    }
 	  },
@@ -775,12 +810,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    jsPrefix: 'Webkit',
 	    alternativeProperties: {
 	      // OLD - iOS 6-, Safari 3.1-6
-	      flex: [{ css: '-webkit-box-flex', js: 'WebkitBoxFlex' }],
-	      order: [{ css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup' }]
+	      flex: [{ css: '-webkit-box-flex', js: 'MozBoxFlex' }],
+	      order: [{ css: '-webkit-box-ordinal-group', js: 'WebkitBoxOrdinalGroup' }],
+	      flexDirection: [{ css: '-webkit-box-orient', js: 'WebkitBoxOrient' }],
+	      alignItems: [{ css: '-webkit-box-align', js: 'WebkitBoxAlign' }],
+	      justifyContent: [{ css: '-webkit-box-pack', js: 'WebkitBoxPack' }]
 	    },
 	    alternativeValues: {
+	      // OLD - iOS 6-, Safari 3.1-6
 	      display: {
-	        flex: ['-webkit-box'] // OLD - iOS 6-, Safari 3.1-6
+	        flex: ['-webkit-box']
+	      },
+	      flexDirection: {
+	        row: ['horizontal'],
+	        column: ['vertical']
+	      },
+	      alignItems: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end']
+	      },
+	      justifyContent: {
+	        'flex-start': ['start'],
+	        'flex-end': ['end'],
+	        'space-between': ['justify']
 	      }
 	    }
 	  }
@@ -832,9 +884,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  domStyle = document.createElement('p').style;
 
 	  // Based on http://davidwalsh.name/vendor-prefix
+	  var cssVendorPrefix;
+	  var prefixMatch;
 	  var windowStyles = window.getComputedStyle(document.documentElement, '');
-	  var prefixMatch = Array.prototype.slice.call(windowStyles).join('').match(/-(moz|webkit|ms|o)-/);
-	  var cssVendorPrefix = prefixMatch && prefixMatch[0];
+
+	  // Array.prototype.slice.call(windowStyles) fails with
+	  // "Uncaught TypeError: undefined is not a function"
+	  // in older versions Android (KitKat) web views
+	  for (var i = 0; i < windowStyles.length; i++) {
+	    prefixMatch = windowStyles[i].match(VENDOR_PREFIX_REGEX);
+
+	    if (prefixMatch) {
+	      break;
+	    }
+	  }
+
+	  cssVendorPrefix = prefixMatch && prefixMatch[0];
 
 	  prefixInfo = infoByCssPrefix[cssVendorPrefix] || prefixInfo;
 	}
@@ -1154,8 +1219,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports) {
 
-	/* @flow */
-
 	'use strict';
 
 	var createMarkupForStyles = function createMarkupForStyles(style, spaces) {
@@ -1170,8 +1233,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
-
-	/* @flow */
 
 	'use strict';
 
